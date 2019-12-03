@@ -1,3 +1,4 @@
+## TODO - convert to drupal8.j2 template
 import os
 import string
 import random
@@ -17,30 +18,36 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 
+## TODO - transfer Helper Functions in a separate module (helper.py)
 ### HELPER FUNCTIONS Section
-
 ## Drupal 8 - Get form_build_id value via parsing
 def get_form_build_id(self, request_path):
     # Get form build ID to pass back to Drupal on login.
-    resp = self.client.get(request_path)
-    parsed_html = BeautifulSoup(resp.content, 'lxml')
+    response = self.client.get(request_path)
+    parsed_html = BeautifulSoup(response.content, 'lxml')
     form_build_id = parsed_html.body.find('input', {'name': 'form_build_id'})['value']
     return form_build_id
 
 ## Drupal 8 - Get form_token for creating content
 def get_form_token(self, request_path):
     # Get form build ID to pass back to Drupal on login.
-    resp = self.client.get(request_path)
-    parsed_html = BeautifulSoup(resp.content, 'lxml')
+    response = self.client.get(request_path)
+    parsed_html = BeautifulSoup(response.content, 'lxml')
     form_token = parsed_html.body.find('input', {'name': 'form_token'})['value']
     return form_token
 
 ## Drupal 8 - Get random article from page
-def get_random_article(self, source_path, search_class):
+def get_random_article(self, source_path, search_class, comment_form_id):
     resp = self.client.get(source_path)
+
     parsed_html = BeautifulSoup(resp.content, 'lxml')
     article_links = [link['href'] for link in parsed_html.body.findAll("a", {"class": search_class})]
-    return random.choice(article_links)
+    random_article_path = random.choice(article_links)
+
+    # Parse returned article for comment form ID and post path
+    random_article_html = BeautifulSoup(self.client.get(random_article_path).content, "lxml")
+    comment_post_path = random_article_html.body.find('form', {'id': comment_form_id})['action']
+    return { "random_article_path": random_article_path, "comment_post_path": comment_post_path }
 
 ## PyTest Code Steps
 class TestKedbloginsearch():
@@ -205,6 +212,7 @@ class AnonymousTaskSet(TaskSet):
       
 
     ## Anon.7.0 API Endpoints (REST/JSON:API)
+    ## TODO - actual endpoints functions and helpers
     def retrieve_all_endpoints(self):
         self.client.get("/json/api/endpoints/list")
 
@@ -214,10 +222,10 @@ class AnonymousTaskSet(TaskSet):
     ## Anon.7.0 End 
 
 ## Anon.U Anonymous User
-# class AnonymousUser(HttpLocust):
-#     host = os.getenv('TARGET_URL', "http://dev-ps-loadtest-dummy.pantheonsite.io")
-#     task_set = AnonymousTaskSet
-#     wait_time = between(1, 3)
+class AnonymousUser(HttpLocust):
+    host = os.getenv('TARGET_URL', "http://dev-ps-loadtest-dummy.pantheonsite.io")
+    task_set = AnonymousTaskSet
+    wait_time = between(1, 3)
 
 
 ## Auth.T Authenticated TaskSet
@@ -243,9 +251,12 @@ class AuthenticatedTaskSet(TaskSet):
             "form_build_id": get_form_build_id(self, request_path),
             "op": "Log in"
         })
+    
+    def on_stop(self):
+        self.client.get("/user/logout")
 
     ## Auth.1.1 User Login then Navigate Site. Add some pages to load.
-    @task(0)
+    @task(1)
     def navigate_site_steps(self):
         self.client.get("/")
         self.client.get("/en/user/4/edit")
@@ -253,43 +264,57 @@ class AuthenticatedTaskSet(TaskSet):
     ## Auth.1.0 End
 
     ## 2.0 Create an Article
-    @task(0)
+    @task(1)
     def create_node_article(self):
-        fake = Faker() # Create new Faker instance
+        ## TODO
+        # Add "files[field_image_0]": get_lorem_picsum(),
+        
+        # Create new Faker instance and text
+        fake = Faker() 
+        article_title = fake.format('sentence')
+        article_body = fake.format('text')
+        article_tags = fake.format('word')
+        print(article_title)
+        print(article_body)
+        print(article_tags)
+
         request_path = "/node/add/article"
-        self.client.get(request_path)
         self.client.post(request_path, {
-            "title[0][value]": fake.sentence(),
-            "body[0][value]": fake.text(),
-            "field_tags[target_id]": fake.word(),
+            "title[0][value]": article_title,
+            "body[0][value]": article_body,
+            "field_tags[target_id]": article_tags,
             "langcode[0][value]": "en",
-            #"files[field_image_0]": get_lorem_picsum(),
-            "moderation_state[0][state]": "published",
+            "moderation_state[0][state]": "published", ## Depending on the roles and permissions, this might not work
             "form_id": "node_article_form",
             "form_token": get_form_token(self, request_path),
             "form_build_id": get_form_build_id(self, request_path),
             "op": "Save"
         })
+        
     ## 2.0 End
 
     ## 3.0 Adding Comments to Articles
     # Scenario: Configured to only post as Authenticated
+    # Make sure that BigPipe is turned-off in Drupal 8 
+    # The response content is not complete and unable to be parsed by lxml
     @task(100)
     def create_node_article_comment(self):
         fake = Faker() # Create new Faker instance
         
-        # Find a random article from page
-        #random_article_path = get_random_article(self, "/articles", "read-more__link") 
-        #print(random_article_path)
+        # Find a random article from a page
+        # self, Articles or News page, the "class" for Article Links, and the Comment Form ID for all comments
+        random_comment = get_random_article(self, "/articles", "read-more__link", "comment-form")
+        comment_post_path = random_comment["random_article_path"]
+        random_article_path = random_comment["comment_post_path"]
 
-        self.client.get("/node/164")
-        self.client.post("/node/164", {
+        # Post the Comment to the selected 
+        self.client.post(comment_post_path, {
             "subject[0][value]": fake.sentence(),
             "comment_body[0][value]": fake.text(),
             "langcode[0][value]": "en",
             "form_id": "comment_article_comment_form", ## Change depending on the Content type machine name
-            "form_token": get_form_token(self, "/node/164"),
-            "form_build_id": get_form_build_id(self, "/node/164"),
+            "form_token": get_form_token(self, random_article_path),
+            "form_build_id": get_form_build_id(self, random_article_path),
             "op": "Save"
         })
     ## 3.0 End
@@ -304,7 +329,7 @@ class AuthenticatedTaskSet(TaskSet):
 class AuthenticatedUser(HttpLocust):
     host = os.getenv('TARGET_URL', "http://dev-ps-loadtest-dummy.pantheonsite.io")
     task_set = AuthenticatedTaskSet
-    wait_time = between(5, 20)
+    wait_time = between(6, 20)
 
 ## Adv.T Custom Scripts, CasperJS, Selenium, PyTest etc
 class AdvancedTaskSet(TaskSet):
