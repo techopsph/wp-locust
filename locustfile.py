@@ -49,38 +49,7 @@ def get_random_article(self, source_path, search_class, comment_form_id):
     comment_post_path = random_article_html.body.find('form', {'id': comment_form_id})['action']
     return { "random_article_path": random_article_path, "comment_post_path": comment_post_path }
 
-## PyTest Code Steps
-class TestKedbloginsearch():
-  def setup_method(self, method):
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    self.driver = webdriver.Chrome(chrome_options=options)
-    self.vars = {}
-  
-  def teardown_method(self, method):
-    self.driver.quit()
-  
-  def test_kedbloginsearch(self):
-    # Test name: kedb-login-search
-    # Step # | name | target | value | comment
-    # 1 | open | / |  | 
-    self.driver.get("https://dev-ps-loadtest-dummy.pantheonsite.io/")
-    # 2 | click | id=edit-name |  | 
-    self.driver.find_element(By.ID, "edit-name").click()
-    # 3 | type | id=edit-name | eladio@getpantheon.com | 
-    self.driver.find_element(By.ID, "edit-name").send_keys("pantheon")
-    # 4 | type | id=edit-pass | [Pantheon]1234 | 
-    self.driver.find_element(By.ID, "edit-pass").send_keys("pantheon")
-    # 5 | click | id=edit-submit |  | 
-    self.driver.find_element(By.ID, "edit-submit").click()
-    # 6 | click | id=facetapi-link--556 |  | 
-    self.driver.find_element(By.ID, "facetapi-link--556").click()
-    # 7 | click | css=#block-facetapi-qjejqftyhn5j90hmbhoy3t0dllnssrjt > .block-title |  | 
-    self.driver.find_element(By.CSS_SELECTOR, "#block-facetapi-qjejqftyhn5j90hmbhoy3t0dllnssrjt > .block-title").click()
-    # 8 | click | linkText=Log out |  | 
-    self.driver.find_element(By.LINK_TEXT, "Log out").click()
-    # 9 | setWindowSize | 960x1008 |  | 
-    self.driver.set_window_size(960, 1008)
+#############
 
 ## Anon.T Anonymous TaskSet
 class AnonymousTaskSet(TaskSet):
@@ -217,10 +186,10 @@ class AnonymousTaskSet(TaskSet):
     ## Anon.7.0 End 
 
 # Anon.U Anonymous User
-class AnonymousUser(HttpLocust):
-    host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-    task_set = AnonymousTaskSet
-    wait_time = between(1, 3)
+# class AnonymousUser(HttpLocust):
+#     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
+#     task_set = AnonymousTaskSet
+#     wait_time = between(1, 3)
 
 
 ## Auth.T Authenticated TaskSet
@@ -298,8 +267,8 @@ class AuthenticatedTaskSet(TaskSet):
         # Find a random article from a page
         # self, Articles or News page, the "class" for Article Links, and the Comment Form ID for all comments
         random_comment = get_random_article(self, "/articles", "read-more__link", "comment-form")
-        comment_post_path = random_comment["random_article_path"]
-        random_article_path = random_comment["comment_post_path"]
+        random_article_path = random_comment["random_article_path"]
+        comment_post_path = random_comment["comment_post_path"]
         print("Random Article: " + random_article_path)
         print("Comment Post Path: " + comment_post_path)
         
@@ -348,42 +317,113 @@ class AuthenticatedTaskSet(TaskSet):
     ## 5.0 End
 
 # Auth.U Authenticated User
-class AuthenticatedUser(HttpLocust):
-    host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-    task_set = AuthenticatedTaskSet
-    wait_time = between(5, 20)
+# class AuthenticatedUser(HttpLocust):
+#     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
+#     task_set = AuthenticatedTaskSet
+#     wait_time = between(5, 20)
+
+
+
+## Adv.5.PyTest Code Steps
+class TestHomepage():
+  def setup_method(self, method):
+    ## Important: to add headless argument for the load test
+    #options = webdriver.ChromeOptions() 
+    #options.add_argument('headless')
+    #self.driver = webdriver.Chrome(chrome_options=options)
+    self.driver = webdriver.Chrome()
+    self.vars = {}
+  
+  def teardown_method(self, method):
+    self.driver.quit()
+  
+  def test_clickrecipe(self):
+    # Test name: click-recipe
+    # Step # | name | target | value | comment
+    # 1 | open | / |  | 
+    self.driver.get("https://dev-ps-loadtest-dummy.pantheonsite.io/")
+    # 2 | setWindowSize | 1680x978 |  | 
+    self.driver.set_window_size(1680, 978)
+    # 3 | click | linkText=Log in |  | 
+    self.driver.find_element(By.LINK_TEXT, "Log in").click()
+    # 4 | waitForElementEditable | id=edit-name | 30000 | 
+    WebDriverWait(self.driver, 30000).until(expected_conditions.element_to_be_clickable((By.ID, "edit-name")))
+    # 5 | type | id=edit-name | umami | 
+    self.driver.find_element(By.ID, "edit-name").send_keys("umami")
+    # 6 | type | id=edit-pass | umami | 
+    self.driver.find_element(By.ID, "edit-pass").send_keys("umami")
+    # 7 | click | name=op |  | 
+    self.driver.find_element(By.NAME, "op").click()
+    # 8 | click | linkText=Home |  | 
+    self.driver.find_element(By.LINK_TEXT, "Home").click()
+    # 9 | click | linkText=View recipe |  | 
+    self.driver.find_element(By.LINK_TEXT, "View recipe").click()
+    # 10 | click | linkText=Edit |  | 
+    self.driver.find_element(By.LINK_TEXT, "Edit").click()
+    # 11 | click | id=edit-title-0-value |  | 
+    self.driver.find_element(By.ID, "edit-title-0-value").click()
+    # 12 | type | id=edit-title-0-value | Super easy vegetarian pasta bake and more | 
+    self.driver.find_element(By.ID, "edit-title-0-value").send_keys("Super easy vegetarian pasta bake and more")
+    # 13 | click | css=.js-form-item-field-recipe-category-target-id |  | 
+    self.driver.find_element(By.CSS_SELECTOR, ".js-form-item-field-recipe-category-target-id").click()
+    # 14 | click | id=edit-submit |  | 
+    self.driver.find_element(By.ID, "edit-submit").click()
+    # 15 | click | css=.menu-main |  | 
+    self.driver.find_element(By.CSS_SELECTOR, ".menu-main").click()
+    # 16 | mouseOver | css=.site-logo > img |  | 
+    element = self.driver.find_element(By.CSS_SELECTOR, ".site-logo > img")
+    actions = ActionChains(self.driver)
+    actions.move_to_element(element).perform()
+    # 17 | click | css=.site-logo > img |  | 
+    self.driver.find_element(By.CSS_SELECTOR, ".site-logo > img").click()
 
 ## Adv.T Custom Scripts, CasperJS, Selenium, PyTest etc
-# class AdvancedTaskSet(TaskSet):
+class AdvancedTaskSet(TaskSet):
+    def login(self):
+        # login function using http session handler. Modify for the actual login path
+        request_path = "/user/login"
+        self.client.post(request_path, {
+            "name": "umami",
+            "pass": "umami",
+            "form_id": "user_login_form",
+            "form_build_id": get_form_build_id(self, request_path),
+            "op": "Log in"
+        })
+    
+    def on_start(self):
+        self.login() # on_start is called when a Locust start before, any task is scheduled
 
-#     ## Adv.6.0 Recorded Selenium Steps
-#     @task(1)
-#     def pytest(self):
-#          start_time = time.time()
-#          os.system("pytest locustfile.py")
-#          total_time = int((time.time() - start_time) * 1000)
-#          events.request_success.fire(
-#              request_type="pytest",
-#              name="login-search",
-#              response_time=total_time,
-#              response_length=0
-#          )
+    def on_stop(self):
+        self.client.get("/user/logout")
 
-    #@task(1)
-    #def selenium(self):
-    #    start_time = time.time()
-    #     os.system('selenium-side-runner -c "goog:chromeOptions.args=[--headless,--nogpu] browserName=chrome" KEDB-test.side')
-    #     total_time = int((time.time() - start_time) * 1000)
-    #     events.request_success.fire(
-    #         request_type="selenium",
-    #         name="login-search",
-    #         response_time=total_time,
-    #         response_length=0
-    #     )
+    ## Adv.6.0 Recorded Selenium Steps
+    # @task(1)
+    # def pytest(self):
+    #      start_time = time.time()
+    #      os.system("pytest locustfile.py")
+    #      total_time = int((time.time() - start_time) * 1000)
+    #      events.request_success.fire(
+    #          request_type="pytest",
+    #          name="update-recipe-item",
+    #          response_time=total_time,
+    #          response_length=0
+    #      )
+
+    @task(1)
+    def selenium(self):
+        start_time = time.time()
+        os.system('selenium-side-runner -c "goog:chromeOptions.args=[--headless,--nogpu] browserName=chrome" locustfile.side')
+        total_time = int((time.time() - start_time) * 1000)
+        events.request_success.fire(
+            request_type="selenium",
+            name="login-search",
+            response_time=total_time,
+            response_length=0
+        )
 
 ## Adv.U Advanced User Setting
-# class AdvancedUser(HttpLocust):
-#     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-#     task_set = AdvancedTaskSet
-#     wait_time = between(6, 10)
+class AdvancedUser(HttpLocust):
+    host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
+    task_set = AdvancedTaskSet
+    wait_time = between(1, 60)
 

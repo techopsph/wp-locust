@@ -1,7 +1,7 @@
-  title: proupnetic
+  title: drupal-camp-cebu-2018
   type: Anonymous
-  domain: live-proupnetic.pantheonsite.io
-  url: 'http://live-proupnetic.pantheonsite.io/'
+  domain: dev-ps-loadtest-dummy.pantheonsite.io
+  url: 'https://dev-ps-loadtest-dummy.pantheonsite.io'
   site_name: proupnetic
   org_name: 'Tarkenton Enteprises'
   site_uuid: 5efcbe5e-b8b9-429d-bd1f-2e552b3f646a
