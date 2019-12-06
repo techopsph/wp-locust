@@ -185,7 +185,7 @@ class AnonymousTaskSet(TaskSet):
     
     ## Anon.7.0 End 
 
-Anon.U Anonymous User
+#Anon.U Anonymous User
 class AnonymousUser(HttpLocust):
     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
     task_set = AnonymousTaskSet
