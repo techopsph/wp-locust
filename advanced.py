@@ -123,7 +123,7 @@ class AdvancedTaskSet(TaskSet):
     def on_stop(self):
         self.client.get("/user/logout")
 
-    ## Adv.6.0 Recorded Selenium Steps
+    ## Adv.6.0 Recorded Selenium Steps, Selenium Recorder and export to pytest
     # @task(1)
     # def pytest(self):
     #      start_time = time.time()
@@ -136,6 +136,23 @@ class AdvancedTaskSet(TaskSet):
     #          response_length=0
     #      )
 
+    ## CasperJS - Use Katalaon Recorder
+    # @task(1)
+    # def casperjs(self):
+    #     start_time = time.time()
+    #     # Python file example
+    #     # os.system("python casperjs/casperjs.py")
+    #     # CasperJS file example
+    #     os.system("casperjs test casper.js")
+    #     total_time = int((time.time() - start_time) * 1000)
+    #     events.request_success.fire(
+    #         request_type="casperjs",
+    #         name="purchase_physical_prod",
+    #         response_time=total_time,
+    #         response_length=0
+    #     )
+
+    ## Selenium - Use Selenium IDE Recorder 
     @task(1)
     def selenium(self):
         start_time = time.time()
@@ -143,7 +160,7 @@ class AdvancedTaskSet(TaskSet):
         total_time = int((time.time() - start_time) * 1000)
         events.request_success.fire(
             request_type="selenium",
-            name="update-recipe",
+            name="login-search",
             response_time=total_time,
             response_length=0
         )
