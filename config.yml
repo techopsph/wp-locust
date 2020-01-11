@@ -60,27 +60,10 @@
       ratio: '10'
       url_path: /
       view_count: '10'
+  custom_sequences_flag: false
   custom_sequences:
     -
-      name: quiz_5
-      ratio: '15'
-      request_name: what-should-i-do-if-i-am-harassed-quiz
-      steps:
-        -
-          path: /
-          type: get
-        -
-          data: '{&quot;name&quot;:&quot;ebevens@tarkenton.com&quot;, &quot;pass&quot;:&quot;ProUser@10&quot;, &quot;form_id&quot;: &quot;loginform&quot;, &quot;op&quot;: &quot;Log In&quot;}'
-          path: /wp-login.php
-          type: post
-        -
-          path: /quizzes/what-should-i-do-if-i-am-harassed-quiz/
-          type: get
-        -
-          data: '{&quot;question_86_355&quot;:&quot;2&quot;, &quot;question_86_356&quot;:&quot;2&quot;, &quot;question_86_357&quot;:&quot;2&quot;,  &quot;form_id&quot;: &quot;loginform&quot;, &quot;op&quot;: &quot;Finish Quiz&quot;}'
-          path: /quizzes/what-should-i-do-if-i-am-harassed-quiz/
-          type: post
-  pytest_flag: true
+  pytest_flag: false
   pytest_class: TestKedbLoginsearch
   pytest_codes:
     -

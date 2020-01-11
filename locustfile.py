@@ -17,26 +17,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 
-### HELPER FUNCTIONS Section
-# To use, import helper 
-#
-## Drupal 8 - Get form_build_id value via parsing
-def get_form_build_id(self, request_path):
-    # Get form build ID to pass back to Drupal on login.
-    response = self.client.get(request_path)
-    parsed_html = BeautifulSoup(response.content, "lxml")
-    form_build_id = parsed_html.body.find('input', {'name': 'form_build_id'})['value']
-    return form_build_id
-
-## Drupal 8 - Get form_token for creating content
-def get_form_token(self, request_path):
-    # Get form build ID to pass back to Drupal on login.
-    response = self.client.get(request_path)
-    parsed_html = BeautifulSoup(response.content, "lxml")
-    form_token = parsed_html.body.find('input', {'name': 'form_token'})['value']
-    return form_token
-
-## Drupal 8 - Get random article from page
+## WordPress - Get random article from page
 def get_random_article(self, source_path, search_class, comment_form_id):
     resp = self.client.get(source_path)
 
@@ -69,7 +50,7 @@ class AnonymousTaskSet(TaskSet):
                 url = l.attrib["href"]
                 if url != "/user/logout":
                     # Ensure we only run links of the target site, excluding specific domains too
-                    if url != "//dev-ps-loadtest-dummy.pantheonsite.io" and url is not None and "#" not in url and (url.startswith('https://dev-ps-loadtest-dummy.pantheonsite.io') or url.startswith('/')):
+                    if url != "//dev-ps-woocommerce.pantheonsite.io" and url is not None and "#" not in url and (url.startswith('https://dev-ps-woocommerce.pantheonsite.io') or url.startswith('/')):
                         self.urls_on_current_page.append(l.attrib["href"])\
                         
     @task(1) 
@@ -116,22 +97,21 @@ class AnonymousTaskSet(TaskSet):
         print(len(searchWords))
         # Search Paths
         #url = "/search/node/"+random.choice(searchWords) # Search path with Clean URL search
-        url = "/en/search/node?keys="+random.choice(searchWords) # Search path with Clean URL search
+        url = "/?s="+random.choice(searchWords) # Search path with Clean URL search
         print("Calling ", url)
         r = self.client.get(url)
     ## Anon.3.0 End
 
 
-    ## Anon.4.0 User Login Page for Drupal 8
+    ## Anon.4.0 User Login Page for WordPress
     @task(1)
     def login(self):
         #login function using http session handler. Modify for the actual login path
-        request_path = "/user/login"
+        request_path = "/wp-login.php"
         self.client.post(request_path, {
-            "name": "umami",
-            "pass": "umami",
-            "form_id": "user_login_form",
-            "form_build_id": get_form_build_id(self, request_path),
+            "log": "pantheon",
+            "pwd": "pantheon",
+            "testcookie": "1",
             "op": "Log in"
         })
     ## Anon.4.0 End
@@ -158,23 +138,15 @@ class AnonymousTaskSet(TaskSet):
     ## Anon.5.0 End
 
 
-    ## Anon.6.0 WebForm Submissions
-    @task(1)
+    ## Anon.6.0 Contact Form Submissions
+    @task(100)
     def webform_submit(self):
-        request_path = "/chef-application"
+        request_path = "/contact"
         self.client.post(request_path, {
-            "contact[name]": "My Name",
-            "contact[company]": "My Company",
-            "contact[email]": "example@email.com",
-            "contact[phone]": "09088772988",
-            "contact[address]": "Address 1 Entry",
-            "contact[address_2]": "Address 2 Entry",
-            "contact[city]": "San Francisco",
-            "contact[state_province]": "California",
-            "contact[postal_code]": "90210",
-            "contact[country]": "Philippines",
-            "form_id": "webform_submission_demo_application_node_130_add_form",
-            "form_build_id": get_form_build_id(self,request_path),
+            "your-name": "My Name",
+            "your-email": "example@email.com",
+            "your-subject": "The Subject",
+            "your-message": "TEST MESSAGE",
             "op": "Submit"
         })
     ## Anon.6.0 End
@@ -185,11 +157,11 @@ class AnonymousTaskSet(TaskSet):
     
     ## Anon.7.0 End 
 
-# Anon.U Anonymous User
-# class AnonymousUser(HttpLocust):
-#     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-#     task_set = AnonymousTaskSet
-#     wait_time = between(1, 3)
+#Anon.U Anonymous User
+class AnonymousUser(HttpLocust):
+    host = os.getenv('TARGET_URL', "https://dev-ps-woocommerce.pantheonsite.io")
+    task_set = AnonymousTaskSet
+    wait_time = between(1, 3)
 
 
 ## Auth.T Authenticated TaskSet
@@ -207,17 +179,16 @@ class AuthenticatedTaskSet(TaskSet):
 
     def login(self):
         # login function using http session handler. Modify for the actual login path
-        request_path = "/user/login"
+        request_path = "/wp-login.php"
         self.client.post(request_path, {
-            "name": "umami",
-            "pass": "umami",
-            "form_id": "user_login_form",
-            "form_build_id": get_form_build_id(self, request_path),
+            "log": "pantheon",
+            "pwd": "pantheon",
+            "testcookie": "1",
             "op": "Log in"
         })
     
     def on_stop(self):
-        self.client.get("/user/logout")
+        self.client.get("/wp-login.php?action=logout&_wpnonce=d5da34fbc3") # TO-DO -- create a function to ge _wpnonce
 
     ## Auth.1.1 User Login then Navigate Site. Add some pages to load.
     @task(1)
@@ -317,10 +288,10 @@ class AuthenticatedTaskSet(TaskSet):
     ## 5.0 End
 
 # Auth.U Authenticated User
-# class AuthenticatedUser(HttpLocust):
-#     host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-#     task_set = AuthenticatedTaskSet
-#     wait_time = between(5, 20)
+class AuthenticatedUser(HttpLocust):
+    host = os.getenv('TARGET_URL', "https://dev-ps-woocommerce.pantheonsite.io")
+    task_set = AuthenticatedTaskSet
+    wait_time = between(5, 20)
 
 
 
@@ -341,7 +312,7 @@ class TestHomepage():
     # Test name: click-recipe
     # Step # | name | target | value | comment
     # 1 | open | / |  | 
-    self.driver.get("https://dev-ps-loadtest-dummy.pantheonsite.io/")
+    self.driver.get("https://dev-ps-woocommerce.pantheonsite.io/")
     # 2 | setWindowSize | 1680x978 |  | 
     self.driver.set_window_size(1680, 978)
     # 3 | click | linkText=Log in |  | 
@@ -439,8 +410,8 @@ class AdvancedTaskSet(TaskSet):
         )
 
 ## Adv.U Advanced User Setting
-class AdvancedUser(HttpLocust):
-    host = os.getenv('TARGET_URL', "https://dev-ps-loadtest-dummy.pantheonsite.io")
-    task_set = AdvancedTaskSet
-    wait_time = between(1, 60)
+# class AdvancedUser(HttpLocust):
+#     host = os.getenv('TARGET_URL', "https://dev-ps-woocommerce.pantheonsite.io")
+#     task_set = AdvancedTaskSet
+#     wait_time = between(1, 60)
 

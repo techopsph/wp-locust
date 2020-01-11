@@ -62,6 +62,7 @@ class MyTaskSet(TaskSet):
     {%- endif %}
 
     # Custom Locust Steps
+    {%- if custom_sequences_flag %}
     {%- for sequence in custom_sequences %}
     @task({{ sequence.ratio }})
     def custom_{{ sequence.name }}(self):
@@ -81,7 +82,8 @@ class MyTaskSet(TaskSet):
              response_length=0
          )
     {%- endfor %}
-
+    {%- endif %}
+    
     # Top Visited Files
     {% for path in top_visited %}
     @task({{ path.ratio }})

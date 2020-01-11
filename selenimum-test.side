@@ -1,0 +1,191 @@
+{
+  "id": "68643e51-e2f9-46ed-82ec-175c368a1cf4",
+  "version": "2.0",
+  "name": "dccebu2019",
+  "url": "https://dev-ps-loadtest-dummy.pantheonsite.io",
+  "tests": [{
+    "id": "4dd163b8-80ff-4131-9b22-dcee54c4a15f",
+    "name": "Untitled",
+    "commands": [{
+      "id": "5d0fea30-d590-4a14-b933-ba3d4d8b9e78",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5afdfcbd-63e7-4079-b8be-d54967d5a16f",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1024x700",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "48ae2022-6bf5-4477-a1dc-0d5e16540e86",
+      "comment": "",
+      "command": "click",
+      "target": "css=.site-logo > img",
+      "targets": [
+        ["css=.site-logo > img", "css:finder"],
+        ["xpath=//img[@alt='Home']", "xpath:img"],
+        ["xpath=//div[@id='block-umami-branding']/a/img", "xpath:idRelative"],
+        ["xpath=//img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "35eb9c83-a1b7-4560-bbc7-b0dfed6346a3",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "linkText=Articles",
+      "targets": [
+        ["linkText=Articles", "linkText"],
+        ["css=.menu-main__item:nth-child(2) > .menu-main__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Articles')]", "xpath:link"],
+        ["xpath=//nav[@id='block-umami-main-menu']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/en/articles')]", "xpath:href"],
+        ["xpath=//div[2]/nav/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Articles')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a35bd1fa-398f-4cf2-b1a4-6fae737c77b1",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "linkText=Articles",
+      "targets": [
+        ["linkText=Articles", "linkText"],
+        ["css=.menu-main__item:nth-child(2) > .menu-main__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Articles')]", "xpath:link"],
+        ["xpath=//nav[@id='block-umami-main-menu']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/en/articles')]", "xpath:href"],
+        ["xpath=//div[2]/nav/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Articles')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "a42530b3-c728-41f0-b067-a00e8111b060",
+      "comment": "",
+      "command": "click",
+      "target": "css=.read-more:nth-child(4) > .read-more__link",
+      "targets": [
+        ["css=.read-more:nth-child(4) > .read-more__link", "css:finder"],
+        ["xpath=//div[@id='block-views-block-promoted-items-block-1']/div[2]/div/div[2]/div/article/div[2]/a", "xpath:idRelative"],
+        ["xpath=(//a[contains(@href, '/en/node/197')])[4]", "xpath:href"],
+        ["xpath=//article/div[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "636032ab-95ce-4f18-9db3-e780a546c7c5",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,318.6666564941406)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f6289646-6989-40ea-970b-2f6c170c1209",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Edit",
+      "targets": [
+        ["linkText=Edit", "linkText"],
+        ["css=.tab:nth-child(2) > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Edit')])[5]", "xpath:link"],
+        ["xpath=//div[@id='block-umami-local-tasks']/nav/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/en/node/197/edit')]", "xpath:href"],
+        ["xpath=//div/div/div/nav/ul/li[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "84f7454f-df58-4b42-b149-22d6c7e4c00c",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Edit",
+      "targets": [
+        ["linkText=Edit", "linkText"],
+        ["css=.tab:nth-child(2) > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Edit')])[5]", "xpath:link"],
+        ["xpath=//div[@id='block-umami-local-tasks']/nav/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/en/node/197/edit')]", "xpath:href"],
+        ["xpath=//div/div/div/nav/ul/li[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "93842c19-8b1e-45e7-bdc7-877f80d4156b",
+      "comment": "",
+      "command": "doubleClick",
+      "target": "linkText=Edit",
+      "targets": [
+        ["linkText=Edit", "linkText"],
+        ["css=.tab:nth-child(2) > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Edit')])[5]", "xpath:link"],
+        ["xpath=//div[@id='block-umami-local-tasks']/nav/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/en/node/197/edit')]", "xpath:href"],
+        ["xpath=//div/div/div/nav/ul/li[2]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b5383ed8-998a-4f01-9aec-8d03c877f0d4",
+      "comment": "",
+      "command": "click",
+      "target": "id=edit-title-0-value",
+      "targets": [
+        ["id=edit-title-0-value", "id"],
+        ["name=title[0][value]", "name"],
+        ["css=#edit-title-0-value", "css:finder"],
+        ["xpath=//input[@id='edit-title-0-value']", "xpath:attributes"],
+        ["xpath=//div[@id='edit-title-wrapper']/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8b22558e-ec42-4fc3-8e3a-25f0fe15561d",
+      "comment": "",
+      "command": "type",
+      "target": "id=edit-title-0-value",
+      "targets": [
+        ["id=edit-title-0-value", "id"],
+        ["name=title[0][value]", "name"],
+        ["css=#edit-title-0-value", "css:finder"],
+        ["xpath=//input[@id='edit-title-0-value']", "xpath:attributes"],
+        ["xpath=//div[@id='edit-title-wrapper']/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div/input", "xpath:position"]
+      ],
+      "value": "None his job guess expect. AD"
+    }, {
+      "id": "d6bbb9ff-ad92-48e1-ba1e-c49c7618fb0f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.layout-region-node-footer",
+      "targets": [
+        ["css=.layout-region-node-footer", "css:finder"],
+        ["xpath=//form[@id='node-article-edit-form']/div/div[3]", "xpath:idRelative"],
+        ["xpath=//form/div/div[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "026aa45d-f753-4542-9e63-dc75279a0672",
+      "comment": "",
+      "command": "click",
+      "target": "id=edit-submit",
+      "targets": [
+        ["id=edit-submit", "id"],
+        ["name=op", "name"],
+        ["css=#edit-submit", "css:finder"],
+        ["xpath=//input[@id='edit-submit']", "xpath:attributes"],
+        ["xpath=//div[@id='edit-actions']/input", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "c97a12b7-57bd-4e07-a7ef-dacb3d34150a",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["4dd163b8-80ff-4131-9b22-dcee54c4a15f"]
+  }],
+  "urls": ["https://dev-ps-loadtest-dummy.pantheonsite.io/"],
+  "plugins": []
+}

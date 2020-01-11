@@ -14,7 +14,12 @@ brew install jq yq
 ```
 
 # Usage
-`locust -f locustfile.py --host=https://dev-ps-loadtest-dummy.pantheonsite.io`
+`locust -f locustfile.py --host=https://dev-ps-woocommerce.pantheonsite.io`
 
-`locust -f locustfile.py --host=https://dev-ps-loadtest-dummy.pantheonsite.io --no-web -c 10 -r 1`
+`locust -f locustfile.py --host=https://dev-ps-woocommerce.pantheonsite.io --no-web -c 10 -r 1`
 
+
+# TO - DO
+- Convert Jinja Templates to be WordPress
+- Authenticated Tests
+- Advanced Use Cases for WooCommerce and WordPress Multisite
